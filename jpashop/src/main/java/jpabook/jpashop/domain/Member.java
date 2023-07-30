@@ -24,6 +24,7 @@ public class Member {
     @Embedded
     private Address address;
 
+    @OneToMany(mappedBy = "member") // 읽기전용
     private List<Order> orders = new ArrayList<>();
 
 }
