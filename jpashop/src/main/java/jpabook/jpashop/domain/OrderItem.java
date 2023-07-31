@@ -1,7 +1,9 @@
 package jpabook.jpashop.domain;
 
 import jpabook.jpashop.domain.item.Item;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자를 다른 곳에서 생성하는 걸 막는것, 제약 )) -> 유지보수성 증가.
 public class OrderItem {
 
     @Id
@@ -31,6 +34,9 @@ public class OrderItem {
     private int orderPrice; // 주문가격
     private int count; // 주문 수량
 
+//    protected OrderItem(){
+//        //// createOrderItem() 를 사용하기 때문에 기본생성자 제약// jpa는 기본생성자가 필요함.
+//    }
 
 
     // == 생성 메서드 //
@@ -43,6 +49,7 @@ public class OrderItem {
         item.removeStock(count);
         return orderItem;
     }
+
 
 
 
