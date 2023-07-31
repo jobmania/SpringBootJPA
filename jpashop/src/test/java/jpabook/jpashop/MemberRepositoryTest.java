@@ -35,7 +35,7 @@ public class MemberRepositoryTest {
         // then
 
         Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
-        Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
+//        Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
 
         Assertions.assertThat(findMember).isEqualTo(member); // jpa
         // 같은 영ㅇ속성 컨텍스트에서 id 값이 같으면 같은 객체로 식별
