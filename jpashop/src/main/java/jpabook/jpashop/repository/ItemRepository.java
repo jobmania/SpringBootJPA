@@ -17,7 +17,9 @@ public class ItemRepository {
         if(item.getId()==null){ // 처음 저장시에는 id는 null 임.
             em.persist(item);
         }else {
-            em.merge(item);// update한다.
+            Item mergeItem = em.merge(item);// update한다.
+            // 다만 item은 영속성 컨텍스트에 관리가 되지 않는다.
+            // mergeItem은 영속성에서 관리함 ㅇㅇ.
         }
     }
 
