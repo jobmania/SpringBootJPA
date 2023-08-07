@@ -39,8 +39,7 @@ public class JpaMain {
             for (Member member : result) {
                 System.out.println(member.getName());
             }
-
-
+            
             tx.commit();
 
         }catch (Exception e){
