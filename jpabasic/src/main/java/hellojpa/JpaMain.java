@@ -1,5 +1,7 @@
 package hellojpa;
 
+import jdk.swing.interop.SwingInterOpUtils;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -60,7 +62,20 @@ public class JpaMain {
 //            member.setName("바꾸기!!");
 //            System.out.println("===========");
 
+            System.out.println("=======");
 
+            Member member = new Member();
+            member.setUsername("c");
+            em.persist(member);
+            System.out.println("member = " + member.getId());
+            System.out.println("======="); // generated.identify 인경우 persist에 commit함.
+
+            Member member2 = new Member();
+            member2.setUsername("c");
+            em.persist(member2);
+            Member member3 = new Member();
+            member3.setUsername("c");
+            em.persist(member3);
 
 
             tx.commit();
