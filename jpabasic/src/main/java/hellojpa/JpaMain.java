@@ -52,15 +52,16 @@ public class JpaMain {
 
 
             // 영속, commit 이 된순간 query가 날라간다
-            // 모아쓰기! 
-            Member member1 = new Member(150L, "1");
+//            // 모아쓰기!
+//            Member member1 = new Member(150L, "1");
+//            Member member = em.find(Member.class, 150L);
+//
+//            // 값만 바꿧지만, 변경을 감지해서 update 쿼리를 생성!
+//            member.setName("바꾸기!!");
+//            System.out.println("===========");
 
-            Member member = em.find(Member.class, 150L);
 
-            // 값만 바꿧지만, 변경을 감지해서 update 쿼리를 생성!
-            member.setName("바꾸기!!");
-            
-            System.out.println("===========");
+
 
             tx.commit();
 
