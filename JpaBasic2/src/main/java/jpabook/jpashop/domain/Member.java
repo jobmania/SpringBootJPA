@@ -2,6 +2,8 @@ package jpabook.jpashop.domain;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity // 최대한 맵핑시 제약조건 및 조건을 작성하는게 좋다.!
 public class Member {
@@ -15,6 +17,10 @@ public class Member {
     private String city;
     private String street;
     private String zipcode;
+
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
+
 
 
     public Long getId() {
