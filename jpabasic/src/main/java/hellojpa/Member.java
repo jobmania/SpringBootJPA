@@ -6,22 +6,31 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@SequenceGenerator(
-        name = "MEMBER_SEQ_GENERATOR",
-        sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
-        initialValue = 1, allocationSize = 50) // 미리 땡겨쓰기!
+//@SequenceGenerator(
+//        name = "MEMBER_SEQ_GENERATOR",
+//        sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
+//        initialValue = 1, allocationSize = 50) // 미리 땡겨쓰기!
 public class Member {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY  ) // DB 방언에 맞춰 자동생성
-//    private Long id;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "MEMBER_SEQ_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.AUTO  ) // DB 방언에 맞춰 자동생성
+    @Column(name = "MEMBER_ID")
     private Long id;
-    @Column(name = "name") /// 데이터베이스 컬럼 수정 및 제약조건 추가 가능.
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+//            generator = "MEMBER_SEQ_GENERATOR")
+//    private Long id;
+    @Column(name = "username") /// 데이터베이스 컬럼 수정 및 제약조건 추가 가능.
     private String username;
+//    @Column(name = "TEAM_ID")
+//    private Long teamId;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TEAM_ID")  // 연관관계 주인!
+    private Team team;
+
 //    private Integer age;
 //    @Enumerated(EnumType.STRING) // db에 enum 사용
 //    private RoleType roleType;
@@ -55,5 +64,14 @@ public class Member {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
     }
 }

@@ -62,20 +62,40 @@ public class JpaMain {
 //            member.setName("바꾸기!!");
 //            System.out.println("===========");
 
-            System.out.println("=======");
+//            System.out.println("=======");
+//
+//            Member member = new Member();
+//            member.setUsername("c");
+//            em.persist(member);
+//            System.out.println("member = " + member.getId());
+//            System.out.println("======="); // generated.identify 인경우 persist에 commit함.
+//
+//            Member member2 = new Member();
+//            member2.setUsername("c");
+//            em.persist(member2);
+//            Member member3 = new Member();
+//            member3.setUsername("c");
+//            em.persist(member3);
+
+
+
 
             Member member = new Member();
             member.setUsername("c");
             em.persist(member);
-            System.out.println("member = " + member.getId());
-            System.out.println("======="); // generated.identify 인경우 persist에 commit함.
 
-            Member member2 = new Member();
-            member2.setUsername("c");
-            em.persist(member2);
-            Member member3 = new Member();
-            member3.setUsername("c");
-            em.persist(member3);
+
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
+
+            // 객체지향적으로 생각했을때 양쪽으로 작성하는 것이 맞음.
+            member.changeTeam(team); // 연관관계 편의 메서드로 주입
+//            team.getMembers().add(member); // 연관관계 편의 메서드로 주입으로 한쪽은 지워야된다.
+
+
+            em.flush();
+            em.clear();
 
 
             tx.commit();
