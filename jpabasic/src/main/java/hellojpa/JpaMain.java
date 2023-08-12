@@ -87,11 +87,14 @@ public class JpaMain {
 
             Team team = new Team();
             team.setName("TeamA");
+            team.getMembers().add(member);
             em.persist(team);
 
             // 객체지향적으로 생각했을때 양쪽으로 작성하는 것이 맞음.
-            member.changeTeam(team); // 연관관계 편의 메서드로 주입
+//            member.changeTeam(team); // 연관관계 편의 메서드로 주입
 //            team.getMembers().add(member); // 연관관계 편의 메서드로 주입으로 한쪽은 지워야된다.
+
+
 
 
             em.flush();

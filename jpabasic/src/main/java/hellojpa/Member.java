@@ -4,6 +4,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 @Entity
 //@SequenceGenerator(
@@ -29,7 +31,15 @@ public class Member {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")  // 연관관계 주인!
+//    @JoinColumn(name = "TEAM_ID", insertable = false,updatable = false)  // 연관관계 주인!
     private Team team;
+
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProductList;
 
 //    private Integer age;
 //    @Enumerated(EnumType.STRING) // db에 enum 사용
@@ -66,12 +76,12 @@ public class Member {
         this.username = username;
     }
 
-    public Team getTeam() {
-        return team;
-    }
+//    public Team getTeam() {
+//        return team;
+//    }
 
     public void changeTeam(Team team) {
-        this.team = team;
+//        this.team = team;
         team.getMembers().add(this);
     }
 }
