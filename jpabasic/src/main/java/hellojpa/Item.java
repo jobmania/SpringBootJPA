@@ -3,8 +3,9 @@ package hellojpa;
 import javax.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) // 기본은 싱글테이블,
-public class Item {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // 기본은 싱글테이블,
+@DiscriminatorColumn // 기본은 엔티티 명이 들어감.
+public abstract class Item {
     @Id
     @GeneratedValue
     private Long id;
