@@ -12,7 +12,7 @@ import java.util.concurrent.locks.Lock;
 //        name = "MEMBER_SEQ_GENERATOR",
 //        sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
 //        initialValue = 1, allocationSize = 50) // 미리 땡겨쓰기!
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO  ) // DB 방언에 맞춰 자동생성
@@ -55,6 +55,16 @@ public class Member {
 //
 //    @Transient // 디비가아닌 메모리에만 저장하고싶어!
 //    private int temp;
+
+
+    /// 엔티티에 동일한 속성이 반복될때 @
+//    private String createBy;
+//    private LocalDateTime createdDate;
+//    private String modifiedBy;
+//    private String lastModifiedBy;
+//    private LocalDateTime lastModifiedDate;
+
+
 
     public Member() {
     }

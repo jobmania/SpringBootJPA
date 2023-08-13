@@ -95,22 +95,30 @@ public class JpaMain {
 //            team.getMembers().add(member); // 연관관계 편의 메서드로 주입으로 한쪽은 지워야된다.
 
 
-            Movie movie = new Movie();
-            movie.setPrice(110000);
-            movie.setActor("d");
-            movie.setDirector("a");
-            movie.setName("엄준식");
+//            Movie movie = new Movie();
+//            movie.setPrice(110000);
+//            movie.setActor("d");
+//            movie.setDirector("a");
+//            movie.setName("엄준식");
+//
+//            em.persist(movie);
+//
+//            em.flush();
+//            em.clear();
+//
+//            Item findMovie = em.find(Item.class, movie.getId());
+//
+//            /// 각 테이블 전략은 테이블 3개를 다 뒤지는 비효율작업
+//            System.out.println("findMovie = " + findMovie.getName());
 
-            em.persist(movie);
+
+            Member member = new Member();
+            member.setCreateBy("엄");
+            member.setUsername("아이씨");
+            em.persist(member);
 
             em.flush();
             em.clear();
-
-            Item findMovie = em.find(Item.class, movie.getId());
-
-            /// 각 테이블 전략은 테이블 3개를 다 뒤지는 비효율작업 
-            System.out.println("findMovie = " + findMovie.getName());
-
 
             tx.commit();
 
