@@ -1,11 +1,9 @@
 package hellojpa;
 
 import jdk.swing.interop.SwingInterOpUtils;
+import org.hibernate.Hibernate;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import java.util.List;
 
 public class JpaMain {
@@ -112,18 +110,78 @@ public class JpaMain {
 //            System.out.println("findMovie = " + findMovie.getName());
 
 
+//            Member member = new Member();
+//            member.setCreateBy("엄");
+//            member.setUsername("아이씨");
+//            em.persist(member);
+
+
             Member member = new Member();
-            member.setCreateBy("엄");
-            member.setUsername("아이씨");
+            member.setUsername("hello");
             em.persist(member);
+
+            Member member2 = new Member();
+            member.setUsername("hello2");
+            em.persist(member2);
 
             em.flush();
             em.clear();
 
-            tx.commit();
+            //
+//            Member findMember = em.find(Member.class, member.getId());
+            Member findMember = em.find(Member.class, member.getId()); // 실제로 사용할때
+            System.out.println("findMember = " + findMember.getClass());
+            System.out.println("findMember.getId() = " + findMember.getId());
+            System.out.println("findMember.getUsername() = " + findMember.getUsername()); // 사용할때 내부적으로 db에 요청해서 실제 타겟에 요청.
+            System.out.println("after findMember = " + findMember.getClass());
 
+            Member findMember2= em.getReference(Member.class, member2.getId()); // 참조
+            System.out.println("findMember2.getClass() = " + findMember2.getClass());
+
+            System.out.println(" 타입비교, ==  "+(findMember.getClass() == findMember2.getClass())); // 프록시와 실제타입은 동등비교 x
+            System.out.println(" 타입비교,  instanceof"+(findMember instanceof Member));
+            System.out.println(" 타입비교,  instanceof"+(findMember2 instanceof Member));
+
+
+            Member refernce = em.getReference(Member.class, member.getId());
+            System.out.println("refernce.getClass() = " + refernce.getClass()); /// 영속성컨텍스트에 이미 잇기 때문에 프록시가 아닌 실제객체반환.
+
+            // jpa에서 영속성컨텍스트에 잇으면 a == a 는 항상 true;
+            System.out.println("a == a : " + (findMember == refernce));
+
+
+            ////  프록시를 조회했다면 이후 find를 하더라도 프록시로 조회된다.
+            Member refMember = em.getReference(Member.class, member2.getId()); // 프록시
+            System.out.println("refMember.getClass() = " + refMember.getClass());
+
+
+
+            Member findMember3 = em.find(Member.class, member2.getId()); // find 햇지만 프록시
+            System.out.println("findMember3.getClass() = " + findMember3.getClass());
+
+
+            em.flush();
+            em.clear();
+
+            // 만약에 준영속이 된다면 프록시 초기화시 오류발생
+            Member refMember4 = em.getReference(Member.class, member2.getId()); // 프록시
+            System.out.println("refMember4.getClass() = " + refMember4.getClass());
+//            em.detach(refMember4); // 영속화 해제 -> 영속성 도움을 받지 못함 !
+//            em.close();//
+//            em.clear();
+            //  could not initialize proxy [hellojpa.Member#2] - no Session
+            // 에러 발생 초기화 안됨
+            System.out.println("refMember4 = " + refMember4.getUsername());
+
+            // 초기화 됬는지 ture, 안됫느지  false
+            System.out.println(emf.getPersistenceUnitUtil().isLoaded(refMember4));
+
+            Hibernate.initialize(refMember4);// 강제 초기화
+
+            tx.commit();
         }catch (Exception e){
             tx.rollback();
+            e.printStackTrace();
         }finally {
             em.close();
         }
@@ -131,5 +189,13 @@ public class JpaMain {
         emf.close();
         em.close();
 
+    }
+
+    private static void printMember(Member member){
+        System.out.println("member.getUsername() = " + member.getUsername());
+    }
+
+    private static void printMemberAndTeam(Member member){
+        System.out.println(member.getUsername() + member.getTeam().getName());
     }
 }

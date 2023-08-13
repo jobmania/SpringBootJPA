@@ -94,4 +94,12 @@ public class Member extends BaseEntity {
 //        this.team = team;
         team.getMembers().add(this);
     }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }
