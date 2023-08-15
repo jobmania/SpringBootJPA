@@ -181,49 +181,74 @@ public class JpaMain {
 
             /// 지연로딩, 즉시로딩
 
+//
+//            Member member = new Member();
+//            member.setUsername("c");
+//
+//            Member member2 = new Member();
+//            member2.setUsername("cd");
+//
+//
+//            Team team = new Team();
+//            team.setName("TeamA");
+//            Team team2 = new Team();
+//            team.setName("TeamB");
+//
+//            member.setTeam(team);
+//            member2.setTeam(team2);
+//
+//            em.persist(member);
+//            em.persist(member2);
+//            em.persist(team);
+//            em.persist(team2);
+//
+//            em.flush();
+//            em.clear();
+//
+////            Member m = em.find(Member.class, member.getId());
+////            System.out.println(m.getTeam().getClass());
+//
+//
+//            System.out.println("=======팀을 조회한다면???====");
+////            m.getTeam().getName(); // 팀을 실제 사용할때 초기화가 일어난다.
+//
+//
+//            // JPQL N+1 문제
+//            // sql 번역 -> member를 들고옴 -> team이 즉시로딩되어있으면 -> 멤버가 갯수가 10면 10개만큼 쿼리가 별도로 나감
+//            List<Member> members = em.createQuery("select m from Member  m join fetch m.team", Member.class)
+//                    .getResultList();
+//
+//            /// SQL: select * from Member,
+//            // SQL : select * from Team where TEAM_ID = M.id~~
+//            // 만약 다른팀이면 따로따로 들고옴
+//            // N+1 : 결과가 N개로 나오면 그만큼 최초 1개 쿼리 + 결과 N개만큼 쿼리가 나와서
+//
+//            // fetch 조인 사용 하면 lazy 로딩하여
 
-            Member member = new Member();
-            member.setUsername("c");
+            // Cascade
 
-            Member member2 = new Member();
-            member2.setUsername("cd");
+            Parent parent = new Parent();
+            Child child1 = new Child();
+            Child child2= new Child();
+
+            parent.addChild(child1);
+            parent.addChild(child2);
 
 
-            Team team = new Team();
-            team.setName("TeamA");
-            Team team2 = new Team();
-            team.setName("TeamB");
-
-            member.setTeam(team);
-            member2.setTeam(team2);
-
-            em.persist(member);
-            em.persist(member2);
-            em.persist(team);
-            em.persist(team2);
+            // 일반적으로는 3번의 persist를 호출.
+            // 그러나 cascade를 사용하면, 아래의 것들도 persist 해준다.
+            em.persist(parent);
 
             em.flush();
             em.clear();
 
-//            Member m = em.find(Member.class, member.getId());
-//            System.out.println(m.getTeam().getClass());
+            // 고아객체 삭제 ! -> 연관관계가 끊어지면 삭제 .
+            Parent findParent = em.find(Parent.class, parent.getId());
+            findParent.getChildList().remove(0);
+//            em.remove(findParent);
 
 
-            System.out.println("=======팀을 조회한다면???====");
-//            m.getTeam().getName(); // 팀을 실제 사용할때 초기화가 일어난다.
-
-
-            // JPQL N+1 문제
-            // sql 번역 -> member를 들고옴 -> team이 즉시로딩되어있으면 -> 멤버가 갯수가 10면 10개만큼 쿼리가 별도로 나감
-            List<Member> members = em.createQuery("select m from Member  m join fetch m.team", Member.class)
-                    .getResultList();
-
-            /// SQL: select * from Member,
-            // SQL : select * from Team where TEAM_ID = M.id~~
-            // 만약 다른팀이면 따로따로 들고옴
-            // N+1 : 결과가 N개로 나오면 그만큼 최초 1개 쿼리 + 결과 N개만큼 쿼리가 나와서
-
-            // fetch 조인 사용 하면 lazy 로딩하여
+            // 자식은 부모가 생명주기를 관리함. 
 
             tx.commit();
         }catch (Exception e){
