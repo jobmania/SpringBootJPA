@@ -12,7 +12,7 @@ import java.util.concurrent.locks.Lock;
 //        name = "MEMBER_SEQ_GENERATOR",
 //        sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
 //        initialValue = 1, allocationSize = 50) // 미리 땡겨쓰기!
-public class Member extends BaseEntity {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO  ) // DB 방언에 맞춰 자동생성
@@ -65,6 +65,36 @@ public class Member extends BaseEntity {
 //    private LocalDateTime lastModifiedDate;
 
 
+    @Embedded
+
+    private Period period;
+    @Embedded
+    @AttributeOverrides({  @AttributeOverride(name = "city",
+            column = @Column(name = "WORK_CITY")),
+            @AttributeOverride(name = "street",
+                    column = @Column(name = "WORK_STREET")),
+            @AttributeOverride(name = "zipcode",
+                    column = @Column(name = "WORK_ZIPCODE"))}
+    )
+    private Address workAddress;
+    @Embedded
+    private Address homeAddress;
+
+    public Address getWorkAddress() {
+        return workAddress;
+    }
+
+    public void setWorkAddress(Address workAddress) {
+        this.workAddress = workAddress;
+    }
+
+    public Address getHomeAddress() {
+        return homeAddress;
+    }
+
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
+    }
 
     public Member() {
     }
@@ -102,4 +132,14 @@ public class Member extends BaseEntity {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    public Period getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Period period) {
+        this.period = period;
+    }
+
+
 }

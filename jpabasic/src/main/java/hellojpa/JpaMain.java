@@ -227,28 +227,35 @@ public class JpaMain {
 
             // Cascade
 
-            Parent parent = new Parent();
-            Child child1 = new Child();
-            Child child2= new Child();
+//            Parent parent = new Parent();
+//            Child child1 = new Child();
+//            Child child2= new Child();
+//
+//            parent.addChild(child1);
+//            parent.addChild(child2);
+//
+//
+//            // 일반적으로는 3번의 persist를 호출.
+//            // 그러나 cascade를 사용하면, 아래의 것들도 persist 해준다.
+//            em.persist(parent);
+//
+//            em.flush();
+//            em.clear();
+//
+//            // 고아객체 삭제 ! -> 연관관계가 끊어지면 삭제 .
+//            Parent findParent = em.find(Parent.class, parent.getId());
+//            findParent.getChildList().remove(0);
+////            em.remove(findParent);
+            // 자식은 부모가 생명주기를 관리함.
 
-            parent.addChild(child1);
-            parent.addChild(child2);
+            // 값타입
 
+            Member member = new Member();
+            member.setUsername("hee");
+            member.setWorkAddress(new Address("city","street","10000"));
+            member.setPeriod(new Period());
 
-            // 일반적으로는 3번의 persist를 호출.
-            // 그러나 cascade를 사용하면, 아래의 것들도 persist 해준다.
-            em.persist(parent);
-
-            em.flush();
-            em.clear();
-
-            // 고아객체 삭제 ! -> 연관관계가 끊어지면 삭제 .
-            Parent findParent = em.find(Parent.class, parent.getId());
-            findParent.getChildList().remove(0);
-//            em.remove(findParent);
-
-
-            // 자식은 부모가 생명주기를 관리함. 
+            em.persist(member);
 
             tx.commit();
         }catch (Exception e){
