@@ -41,7 +41,7 @@ public class JpaMain {
 //            }
 
 
-            // 쿼리생성시점
+            // 쿼리생성시점 확인 ( 영속성 컨텍스트)
 
 //            System.out.println("=====BEFORE======");
 //            Member member3 = new Member();
@@ -76,7 +76,7 @@ public class JpaMain {
 //            em.persist(member3);
 
 
-
+            // 연관관계 메서드
 
 //            Member member = new Member();
 //            member.setUsername("c");
@@ -115,68 +115,115 @@ public class JpaMain {
 //            member.setUsername("아이씨");
 //            em.persist(member);
 
+//
+//            Member member = new Member();
+//            member.setUsername("hello");
+//            em.persist(member);
+//
+//            Member member2 = new Member();
+//            member.setUsername("hello2");
+//            em.persist(member2);
+//
+//            em.flush();
+//            em.clear();
+//
+//            // 프록시 조회 및 초기화
+////            Member findMember = em.find(Member.class, member.getId());
+//            Member findMember = em.find(Member.class, member.getId()); // 실제로 사용할때
+//            System.out.println("findMember = " + findMember.getClass());
+//            System.out.println("findMember.getId() = " + findMember.getId());
+//            System.out.println("findMember.getUsername() = " + findMember.getUsername()); // 사용할때 내부적으로 db에 요청해서 실제 타겟에 요청.
+//            System.out.println("after findMember = " + findMember.getClass());
+//
+//            Member findMember2= em.getReference(Member.class, member2.getId()); // 참조
+//            System.out.println("findMember2.getClass() = " + findMember2.getClass());
+//
+//            System.out.println(" 타입비교, ==  "+(findMember.getClass() == findMember2.getClass())); // 프록시와 실제타입은 동등비교 x
+//            System.out.println(" 타입비교,  instanceof"+(findMember instanceof Member));
+//            System.out.println(" 타입비교,  instanceof"+(findMember2 instanceof Member));
+//
+//
+//            Member refernce = em.getReference(Member.class, member.getId());
+//            System.out.println("refernce.getClass() = " + refernce.getClass()); /// 영속성컨텍스트에 이미 잇기 때문에 프록시가 아닌 실제객체반환.
+//
+//            // jpa에서 영속성컨텍스트에 잇으면 a == a 는 항상 true;
+//            System.out.println("a == a : " + (findMember == refernce));
+//
+//
+//            ////  프록시를 조회했다면 이후 find를 하더라도 프록시로 조회된다.
+//            Member refMember = em.getReference(Member.class, member2.getId()); // 프록시
+//            System.out.println("refMember.getClass() = " + refMember.getClass());
+//
+//
+//
+//            Member findMember3 = em.find(Member.class, member2.getId()); // find 햇지만 프록시
+//            System.out.println("findMember3.getClass() = " + findMember3.getClass());
+//
+//
+//            em.flush();
+//            em.clear();
+//
+//            // 만약에 준영속이 된다면 프록시 초기화시 오류발생
+//            Member refMember4 = em.getReference(Member.class, member2.getId()); // 프록시
+//            System.out.println("refMember4.getClass() = " + refMember4.getClass());
+////            em.detach(refMember4); // 영속화 해제 -> 영속성 도움을 받지 못함 !
+////            em.close();//
+////            em.clear();
+//            //  could not initialize proxy [hellojpa.Member#2] - no Session
+//            // 에러 발생 초기화 안됨
+//            System.out.println("refMember4 = " + refMember4.getUsername());
+//
+//            // 초기화 됬는지 ture, 안됫느지  false
+//            System.out.println(emf.getPersistenceUnitUtil().isLoaded(refMember4));
+//
+//            Hibernate.initialize(refMember4);// 강제 초기화
+
+
+            /// 지연로딩, 즉시로딩
+
 
             Member member = new Member();
-            member.setUsername("hello");
-            em.persist(member);
+            member.setUsername("c");
 
             Member member2 = new Member();
-            member.setUsername("hello2");
+            member2.setUsername("cd");
+
+
+            Team team = new Team();
+            team.setName("TeamA");
+            Team team2 = new Team();
+            team.setName("TeamB");
+
+            member.setTeam(team);
+            member2.setTeam(team2);
+
+            em.persist(member);
             em.persist(member2);
+            em.persist(team);
+            em.persist(team2);
 
             em.flush();
             em.clear();
 
-            //
-//            Member findMember = em.find(Member.class, member.getId());
-            Member findMember = em.find(Member.class, member.getId()); // 실제로 사용할때
-            System.out.println("findMember = " + findMember.getClass());
-            System.out.println("findMember.getId() = " + findMember.getId());
-            System.out.println("findMember.getUsername() = " + findMember.getUsername()); // 사용할때 내부적으로 db에 요청해서 실제 타겟에 요청.
-            System.out.println("after findMember = " + findMember.getClass());
-
-            Member findMember2= em.getReference(Member.class, member2.getId()); // 참조
-            System.out.println("findMember2.getClass() = " + findMember2.getClass());
-
-            System.out.println(" 타입비교, ==  "+(findMember.getClass() == findMember2.getClass())); // 프록시와 실제타입은 동등비교 x
-            System.out.println(" 타입비교,  instanceof"+(findMember instanceof Member));
-            System.out.println(" 타입비교,  instanceof"+(findMember2 instanceof Member));
+//            Member m = em.find(Member.class, member.getId());
+//            System.out.println(m.getTeam().getClass());
 
 
-            Member refernce = em.getReference(Member.class, member.getId());
-            System.out.println("refernce.getClass() = " + refernce.getClass()); /// 영속성컨텍스트에 이미 잇기 때문에 프록시가 아닌 실제객체반환.
-
-            // jpa에서 영속성컨텍스트에 잇으면 a == a 는 항상 true;
-            System.out.println("a == a : " + (findMember == refernce));
+            System.out.println("=======팀을 조회한다면???====");
+//            m.getTeam().getName(); // 팀을 실제 사용할때 초기화가 일어난다.
 
 
-            ////  프록시를 조회했다면 이후 find를 하더라도 프록시로 조회된다.
-            Member refMember = em.getReference(Member.class, member2.getId()); // 프록시
-            System.out.println("refMember.getClass() = " + refMember.getClass());
+            // JPQL N+1 문제
+            // sql 번역 -> member를 들고옴 -> team이 즉시로딩되어있으면 -> 멤버가 갯수가 10면 10개만큼 쿼리가 별도로 나감
+            List<Member> members = em.createQuery("select m from Member  m join fetch m.team", Member.class)
+                    .getResultList();
 
+            /// SQL: select * from Member,
+            // SQL : select * from Team where TEAM_ID = M.id~~
+            // 만약 다른팀이면 따로따로 들고옴
+            // N+1 : 결과가 N개로 나오면 그만큼 최초 1개 쿼리 + 결과 N개만큼 쿼리가 나와서
 
-
-            Member findMember3 = em.find(Member.class, member2.getId()); // find 햇지만 프록시
-            System.out.println("findMember3.getClass() = " + findMember3.getClass());
-
-
-            em.flush();
-            em.clear();
-
-            // 만약에 준영속이 된다면 프록시 초기화시 오류발생
-            Member refMember4 = em.getReference(Member.class, member2.getId()); // 프록시
-            System.out.println("refMember4.getClass() = " + refMember4.getClass());
-//            em.detach(refMember4); // 영속화 해제 -> 영속성 도움을 받지 못함 !
-//            em.close();//
-//            em.clear();
-            //  could not initialize proxy [hellojpa.Member#2] - no Session
-            // 에러 발생 초기화 안됨
-            System.out.println("refMember4 = " + refMember4.getUsername());
-
-            // 초기화 됬는지 ture, 안됫느지  false
-            System.out.println(emf.getPersistenceUnitUtil().isLoaded(refMember4));
-
-            Hibernate.initialize(refMember4);// 강제 초기화
+            // fetch 조인 사용 하면 lazy 로딩하여
 
             tx.commit();
         }catch (Exception e){

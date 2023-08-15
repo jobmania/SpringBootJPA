@@ -29,12 +29,12 @@ public class Member extends BaseEntity {
 //    private Long teamId;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // 프록시 객체로 조회 ! << 멤버만 조회
     @JoinColumn(name = "TEAM_ID")  // 연관관계 주인!
 //    @JoinColumn(name = "TEAM_ID", insertable = false,updatable = false)  // 연관관계 주인!
     private Team team;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LOCKER_ID")
     private Locker locker;
 
