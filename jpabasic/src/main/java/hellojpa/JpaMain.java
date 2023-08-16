@@ -249,14 +249,36 @@ public class JpaMain {
             // 자식은 부모가 생명주기를 관리함.
 
             // 값타입
-
+/*
             Member member = new Member();
             member.setUsername("hee");
             member.setWorkAddress(new Address("city","street","10000"));
             member.setPeriod(new Period());
 
             em.persist(member);
+            */
 
+
+            // 값타입 공유시 위험
+            Address address = new Address("city", "strre", "222");
+            Member member1 = new Member();
+            member1.setUsername("hee");
+            member1.setHomeAddress(address);
+            Member member2 = new Member();
+            member2.setUsername("hee");
+
+            Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
+            member2.setHomeAddress(copyAddress);
+
+            em.persist(member1);
+            em.persist(member2);
+            // 공유참조 문제 발생 !!!  이를  막기위해서 임베디드를 바로 사용하는 것이 아닌 값을 복사함 .
+//            member1.getHomeAddress().setCity("바꾸고 싶은 주소야 ! ");
+            /// 생성자로만 생성하고, 변경을 막기 !  setter  삭제
+
+            // 변경할려면 새로운 값을
+            Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
+            member1.setHomeAddress(newAddress);
             tx.commit();
         }catch (Exception e){
             tx.rollback();
