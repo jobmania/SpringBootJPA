@@ -259,7 +259,7 @@ public class JpaMain {
             */
 
 
-            // 값타입 공유시 위험
+         /*   // 값타입 공유시 위험
             Address address = new Address("city", "strre", "222");
             Member member1 = new Member();
             member1.setUsername("hee");
@@ -278,7 +278,56 @@ public class JpaMain {
 
             // 변경할려면 새로운 값을
             Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
-            member1.setHomeAddress(newAddress);
+            member1.setHomeAddress(newAddress);*/
+
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(new Address("city","street", "lozcl"));
+
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("ㅇ머2");
+            member.getFavoriteFoods().add("ㅇ머3");
+            member.getFavoriteFoods().add("ㅇ머4");
+
+//            member.getAddressHistory().a(new Address("old","stret","33"));
+//            member.getAddressHistory().add(new Address("old4","stret","33"));
+//            member.getAddressHistory().add(new Address("old1","stret","33"));
+
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            System.out.println("====================");
+            Member findMember = em.find(Member.class, member.getId());
+
+            List<AddressEntity> addressHistory = findMember.getAddressHistory();
+            for (AddressEntity address : addressHistory) {
+                System.out.println("address.getCity() = " + address.getAddress().getCity());
+            }
+
+            for (String favoriteFood : findMember.getFavoriteFoods()) {
+                System.out.println("favoriteFood = " + favoriteFood);
+            }
+
+            //////////// 변경은 무조건 생성자로 생성해서 넣기!
+            Address newAddress = new Address("뉴", "기", "니");
+            findMember.setHomeAddress(newAddress);
+
+
+            // 컬렉션 값으로
+            findMember.getFavoriteFoods().remove("치킨");
+            findMember.getFavoriteFoods().add("립스테이크!");
+
+            System.out.println("========================");
+            // 수정:  equals 및 해시코드 적용되어야 있어야함.
+//            findMember.getAddressHistory().remove(new AddressEntity("old", "stret", "33"));
+            findMember.getAddressHistory().add(new AddressEntity("new","stret","33"));
+
+            // 수정
+
+
             tx.commit();
         }catch (Exception e){
             tx.rollback();
