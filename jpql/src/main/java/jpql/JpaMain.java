@@ -22,9 +22,37 @@ public class JpaMain {
 
             em.persist(member);
 
-            em.createQuery("select m.team from Member m where m.name = :username")
-                    .setParameter("username", "mer1")
-                    .getSingleResult();
+            em.flush();
+            em.clear();
+
+            // 영속성에 관리가 되나??
+//              em.createQuery("select m.name, m.age from Member m ")
+//                    .getResultList();
+
+            // 관리됨 ㅇㅇ !
+
+            // 여러가지 타입을 조회하고 싶어!
+
+//            List resultList = em.createQuery("select m.name, m.age from Member m ")
+//                    .getResultList();
+//
+//            // 1, object타입으로
+//            Object o = resultList.get(0);
+//            Object[] result = (Object[]) o;
+//
+//            System.out.println(result[0]);
+//            System.out.println(result[1]);
+//
+//            // 2.  List<Object[]>선언
+//            List<Object[]> resultList2 = em.createQuery("select m.name, m.age from Member m ")
+//                    .getResultList();
+
+            //3 . new 객체로 생성자를 통해서 출력 ! 
+            List<MemberDTO> resultList = em.createQuery("select new jpql.MemberDTO(m.name, m.age) from Member m ", MemberDTO.class)
+                    .getResultList();
+
+            MemberDTO memberDTO = resultList.get(0);
+            System.out.println("memberDTO.getName() = " + memberDTO.getName());
 
             tx.commit();
         } catch (Exception e) {
