@@ -4,6 +4,9 @@ import jdk.swing.interop.SwingInterOpUtils;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class JpaMain {
@@ -280,7 +283,7 @@ public class JpaMain {
             Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
             member1.setHomeAddress(newAddress);*/
 
-
+/*
             Member member = new Member();
             member.setUsername("member1");
             member.setHomeAddress(new Address("city","street", "lozcl"));
@@ -325,14 +328,34 @@ public class JpaMain {
 //            findMember.getAddressHistory().remove(new AddressEntity("old", "stret", "33"));
             findMember.getAddressHistory().add(new AddressEntity("new","stret","33"));
 
-            // 수정
+            // 수정*/
+
+
+           /* //Criteria 사용 준비 --> 가독성 어렵다~!
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Member> query = cb.createQuery(Member.class);
+
+            Root<Member> m = query.from(Member.class);
+
+            CriteriaQuery<Member> cq = query.select(m).where(cb.equal(m.get("username"), "kim"));
+
+            List<Member> resultList = em.createQuery(cq).getResultList();*/
+
+
+            // 네티이브 쿼리
+
+            Member member = new Member();
+            member.setUsername("MEMBER1");
+            em.persist(member);
+
+            // flush -> commit 또는 query 날라갈때
 
 
             tx.commit();
-        }catch (Exception e){
+        } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();
-        }finally {
+        } finally {
             em.close();
         }
 
@@ -341,11 +364,11 @@ public class JpaMain {
 
     }
 
-    private static void printMember(Member member){
+    private static void printMember(Member member) {
         System.out.println("member.getUsername() = " + member.getUsername());
     }
 
-    private static void printMemberAndTeam(Member member){
+    private static void printMemberAndTeam(Member member) {
         System.out.println(member.getUsername() + member.getTeam().getName());
     }
 }
