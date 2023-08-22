@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Collection;
 import java.util.List;
 
 public class JpaMain {
@@ -343,12 +344,35 @@ public class JpaMain {
 
 
             // 네티이브 쿼리
+            Team team = new Team();
+            em.persist(team);
+
 
             Member member = new Member();
             member.setUsername("MEMBER1");
+            member.setTeam(team);
             em.persist(member);
 
+            Member member2 = new Member();
+            member2.setUsername("MEMBER2");
+            member2.setTeam(team);
+            em.persist(member2);
+
+
+
             // flush -> commit 또는 query 날라갈때
+            em.flush();
+            em.clear();
+
+            String query = "select t.members.size from Team t"; // 묵시적 조인보다 명시적 조인으로 해야 리스트를 접근가능
+            String query2 = "select m.username from Team t join t.members m"; // 묵시적 조인보다 명시적 조인으로 해야 리스트를 접근가능
+
+            List<Collection> result = em.createQuery(query, Collection.class)
+                    .getResultList();
+
+            // 묵시적 조인은 성능튜닝에 막대한 영향을 끼침 (조인이 발생하는지 직관적으로 알기 어려움)
+
+            System.out.println("result = " + result);
 
 
             tx.commit();
