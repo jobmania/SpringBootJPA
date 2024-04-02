@@ -31,7 +31,7 @@ public class JpaMain {
             member.setName("aa");
             member.setAge(10);
             member.setTeam(teamA);
-            member.setType(MemberType.Admin);
+            member.setType(MemberType.User);
 
             em.persist(member);
 
@@ -54,14 +54,27 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            String query = "select m From Member m join fetch m.team ";
+            List<Member> resultList1 = em.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", "aa")
+                    .getResultList();
 
-
-            List<Member> resultList = em.createQuery(query, Member.class).getResultList();
-
-            for (Member member1 : resultList) {
-                System.out.println("member1 + member1.getTeam().getName() = " + member1 + member1.getTeam().getName());
+            for (Member member1 : resultList1) {
+                System.out.println("member1 = " + member1);
             }
+
+
+//            String query = " select m from Member m where m.team = :team ";
+//
+//
+//            List<Member> resultList = em.createQuery(query, Member.class)
+//                    .setParameter("team", teamA)
+//                    .getResultList();
+//
+//            for (Member member1 : resultList) {
+//                System.out.println("member1 = " + member1);
+//            }
+
+            tx.commit();
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();
