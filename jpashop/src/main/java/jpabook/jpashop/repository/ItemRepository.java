@@ -13,27 +13,20 @@ public class ItemRepository {
 
     private final EntityManager em;
 
-    public void save(Item item){
-        if(item.getId()==null){ // 처음 저장시에는 id는 null 임.
+    public void save(Item item) {
+        if (item.getId() == null) {
             em.persist(item);
-        }else {
-            Item mergeItem = em.merge(item);// update한다.
-            // 다만 item은 영속성 컨텍스트에 관리가 되지 않는다.
-            // mergeItem은 영속성에서 관리함 ㅇㅇ.
+        } else {
+            em.merge(item);
         }
     }
 
-
-    public Item findOne(Long id){
+    public Item findOne(Long id) {
         return em.find(Item.class, id);
     }
 
-    public List<Item> findAll(){
+    public List<Item> findAll() {
         return em.createQuery("select i from Item i", Item.class)
                 .getResultList();
     }
-
-
-
-
 }

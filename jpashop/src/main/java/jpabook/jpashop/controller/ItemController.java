@@ -3,7 +3,6 @@ package jpabook.jpashop.controller;
 import jpabook.jpashop.domain.item.Book;
 import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.service.ItemService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +20,14 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping("/items/new")
-    public String createForm(Model model){
-        model.addAttribute("form", new Book());
+    public String createForm(Model model) {
+        model.addAttribute("form", new BookForm());
         return "items/createItemForm";
     }
 
     @PostMapping("/items/new")
-    public String create(BookForm form){
+    public String create(BookForm form) {
+
         Book book = new Book();
         book.setName(form.getName());
         book.setPrice(form.getPrice());
@@ -40,15 +40,15 @@ public class ItemController {
     }
 
     @GetMapping("/items")
-    public String list(Model model){
+    public String list(Model model) {
         List<Item> items = itemService.findItems();
         model.addAttribute("items", items);
         return "items/itemList";
     }
 
-    @GetMapping("/items/{itemId}/edit")
-    public String updateForm(@PathVariable("itemId") Long itemId, Model model){
-        Book item =(Book) itemService.findOne(itemId);
+    @GetMapping("items/{itemId}/edit")
+    public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
+        Book item = (Book) itemService.findOne(itemId);
 
         BookForm form = new BookForm();
         form.setId(item.getId());
@@ -60,29 +60,18 @@ public class ItemController {
 
         model.addAttribute("form", form);
         return "items/updateItemForm";
-
-
     }
 
-    @PostMapping("/items/{itemId}/edit")
-    public String updateItem(@ModelAttribute("form") BookForm form, @PathVariable Long itemId){
+    @PostMapping("items/{itemId}/edit")
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute("form") BookForm form) {
 
-//        Book book = new Book();
-//        book.setId(form.getId()); // id가 세팅이 되어잇네? -- -준영속 엔티티..(jpa가 관리안함)
-//        book.setName(form.getName());
-//        book.setPrice(form.getPrice());
-//        book.setStockQuantity(form.getStockQuantity());
-//        book.setAuthor(form.getAuthor());
-//        book.setIsbn(form.getIsbn());
-//
-//        itemService.saveItem(book);
-
-        // 더 나은 구조
-        // 1. 콘트럴로에서 엔티티를 어설프게 사용 xx
         itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+
         return "redirect:/items";
-
-
     }
-
 }
+
+
+
+
+

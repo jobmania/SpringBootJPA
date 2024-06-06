@@ -12,11 +12,10 @@ public class JpashopApplication {
 		SpringApplication.run(JpashopApplication.class, args);
 	}
 
-
-	// V1 Hibernate 모듈 -> 엔티티를 직접 반환 ! --> 사용하면 안된다 !
 	@Bean
-	Hibernate5Module hibernate5Module(){
-		return new Hibernate5Module();
-	}
-
-}
+	Hibernate5Module hibernate5Module() {
+		Hibernate5Module hibernate5Module = new Hibernate5Module();
+		//강제 지연 로딩 설정
+		hibernate5Module.configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING, true);
+		return hibernate5Module;
+	}}

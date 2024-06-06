@@ -1,6 +1,6 @@
 package jpabook.jpashop.exception;
 
-public class NotEnoughStockException extends RuntimeException{
+public class NotEnoughStockException extends RuntimeException {
 
     public NotEnoughStockException() {
         super();
@@ -18,7 +18,4 @@ public class NotEnoughStockException extends RuntimeException{
         super(cause);
     }
 
-    protected NotEnoughStockException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

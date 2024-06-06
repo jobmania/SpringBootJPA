@@ -9,19 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 
-
-
-
-/** 어플리케이션 실행 시점 Test Data 주입!
- * user A
- *  JPA BOOK 1
- *  JPA BOOK 2
- *
- * user B
- *  Spring1 Book
- *  Spring2 Book
- * */
-
+/**
+ * 종 주문 2개
+ * * userA
+ * 	 * JPA1 BOOK
+ * 	 * JPA2 BOOK
+ * * userB
+ * 	 * SPRING1 BOOK
+ * 	 * SPRING2 BOOK
+ */
 @Component
 @RequiredArgsConstructor
 public class InitDb {
@@ -29,30 +25,28 @@ public class InitDb {
     private final InitService initService;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         initService.dbInit1();
         initService.dbInit2();
-        
-       // 여기에 Service 코드작성하면 안되고 별도의 Bean을 등록해야된다.
     }
-
 
     @Component
     @Transactional
     @RequiredArgsConstructor
-    static class InitService{
+    static class InitService {
+
         private final EntityManager em;
-        public void dbInit1(){
 
-            Member member = createMember("userA","서울","1","5123");
+        public void dbInit1() {
+            System.out.println("Init1" + this.getClass());
+            Member member = createMember("userA", "서울", "1", "1111");
             em.persist(member);
 
-            Book book1 = createBook("JPA BOOK1",10000,100);
+            Book book1 = createBook("JPA1 BOOK", 10000, 100);
             em.persist(book1);
 
-            Book book2 = createBook("JPA BOOK2", 20000, 100);
+            Book book2 = createBook("JPA2 BOOK", 20000, 100);
             em.persist(book2);
-
 
             OrderItem orderItem1 = OrderItem.createOrderItem(book1, 10000, 1);
             OrderItem orderItem2 = OrderItem.createOrderItem(book2, 20000, 2);
@@ -60,34 +54,34 @@ public class InitDb {
             Delivery delivery = createDelivery(member);
             Order order = Order.createOrder(member, delivery, orderItem1, orderItem2);
             em.persist(order);
-
-
         }
 
-
-        public void dbInit2(){
-
-            Member member = createMember("userB","부산","4","9672");
+        public void dbInit2() {
+            Member member = createMember("userB", "진주", "2", "2222");
             em.persist(member);
 
-            Book book1 = createBook("Spring BOOK1",20000,220);
+            Book book1 = createBook("SPRING1 BOOK", 20000, 200);
             em.persist(book1);
 
-            Book book2 = createBook("Spring BOOK2", 40000, 300);
+            Book book2 = createBook("SPRING2 BOOK", 40000, 300);
             em.persist(book2);
 
-
-            OrderItem orderItem1 = OrderItem.createOrderItem(book1, 10000, 1);
-            OrderItem orderItem2 = OrderItem.createOrderItem(book2, 20000, 2);
+            OrderItem orderItem1 = OrderItem.createOrderItem(book1, 20000, 3);
+            OrderItem orderItem2 = OrderItem.createOrderItem(book2, 40000, 4);
 
             Delivery delivery = createDelivery(member);
             Order order = Order.createOrder(member, delivery, orderItem1, orderItem2);
             em.persist(order);
-
-
         }
 
-        private static Book createBook(String name, int price, int stockQuantity) {
+        private Member createMember(String name, String city, String street, String zipcode) {
+            Member member = new Member();
+            member.setName(name);
+            member.setAddress(new Address(city, street, zipcode));
+            return member;
+        }
+
+        private Book createBook(String name, int price, int stockQuantity) {
             Book book1 = new Book();
             book1.setName(name);
             book1.setPrice(price);
@@ -95,23 +89,11 @@ public class InitDb {
             return book1;
         }
 
-        private static Delivery createDelivery(Member member) {
+        private Delivery createDelivery(Member member) {
             Delivery delivery = new Delivery();
             delivery.setAddress(member.getAddress());
             return delivery;
         }
-
-        private static Member createMember(String userName, String city, String street, String zipCode ) {
-            Member member = new Member();
-            member.setName(userName);
-            member.setAddress(new Address(city,street,zipCode));
-            return member;
-        }
-
-
-
     }
-
 }
-
 

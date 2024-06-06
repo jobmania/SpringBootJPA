@@ -7,12 +7,11 @@ import javax.persistence.Embeddable;
 @Embeddable
 @Getter
 public class Address {
+
     private String city;
     private String street;
     private String zipcode;
 
-
-    // JPA는 리플렉션, 기본생성자
     protected Address() {
     }
 
