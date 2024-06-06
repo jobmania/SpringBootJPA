@@ -30,7 +30,7 @@ dependencies {
 	// recompile 시 반영
 	implementation 'org.springframework.boot:spring-boot-devtools'
 
-	//
+	//sql parameter show
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
 
 	testImplementation 'org.projectlombok:lombok:1.18.26'
