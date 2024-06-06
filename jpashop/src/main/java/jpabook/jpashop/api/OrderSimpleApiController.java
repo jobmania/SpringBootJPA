@@ -52,6 +52,8 @@ public class OrderSimpleApiController {
      */
     @GetMapping("/api/v2/simple-orders")
     public List<SimpleOrderDto> ordersV2() {
+        // ORDER 2개
+        // N + 1 > 1(오더 ) + N 회원 + N 배송
         List<Order> orders = orderRepository.findAll();
         List<SimpleOrderDto> result = orders.stream()
                 .map(o -> new SimpleOrderDto(o))
@@ -67,13 +69,18 @@ public class OrderSimpleApiController {
      */
     @GetMapping("/api/v3/simple-orders")
     public List<SimpleOrderDto> ordersV3() {
+        // fetch join !!
         List<Order> orders = orderRepository.findAllWithMemberDelivery();
-        List<SimpleOrderDto> result = orders.stream()
-                .map(o -> new SimpleOrderDto(o))
+        return orders.stream()
+                .map(SimpleOrderDto::new)
                 .collect(toList());
-        return result;
     }
 
+    /***
+     * V4
+     * 엔티티 객체 전체가아닌
+     * DTO 객체를 즉시 반환
+     * */
     @GetMapping("/api/v4/simple-orders")
     public List<OrderSimpleQueryDto> ordersV4() {
         return orderSimpleQueryRepository.findOrderDtos();

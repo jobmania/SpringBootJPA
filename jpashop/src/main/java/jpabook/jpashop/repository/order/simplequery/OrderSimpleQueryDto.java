@@ -6,7 +6,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
+@Data // DTO는 엔티티를 참조해도 된다.
 public class OrderSimpleQueryDto {
 
     private Long orderId;
