@@ -33,7 +33,9 @@ public class Order {
     @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL) /// 오더를 조회빈도 높기때문에 여기에 외래키를 둘 수도 잇음
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
+
     private LocalDateTime orderDate; // 주문시간
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status; //주문상태 [ORDER, CANCEL]
 
