@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/***
+ * 특정 화면에 밀접한 비즈니스로직을 위해서
+ * 분리!
+ * */
+
 @Repository
 @RequiredArgsConstructor
 public class OrderQueryRepository {
@@ -28,6 +33,8 @@ public class OrderQueryRepository {
             List<OrderItemQueryDto> orderItems = findOrderItems(o.getOrderId());
             o.setOrderItems(orderItems);
         });
+
+
         return result;
     }
 
