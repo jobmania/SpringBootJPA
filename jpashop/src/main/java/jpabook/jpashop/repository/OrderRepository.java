@@ -110,22 +110,40 @@ public class OrderRepository {
     }
 
     public List<Order> findAllWithItem() {
-        return em.createQuery(
-                "select distinct o from Order o" +
-                        " join fetch o.member m" +
-                        " join fetch o.delivery d" +
-                        " join fetch o.orderItems oi" +
-                        " join fetch oi.item i", Order.class)
-                .getResultList();
+
+        /**
+         * 일대다 조인 경우 데이터 중복이 일어난다.
+         * ---->Order는 Distinct 사용..
+         * 실행되는 쿼리는 중복이 제거가 안되지만,
+         * JPA에서 orderid로  order 객체만 중복제거해준다.
+         * 1. DB에 DINSTINCTG 실행
+         * 2. 엔티티가 중복인 경우 걸러서 담아준다.
+         * */
+      return em.createQuery(
+              "select distinct o from Order  o " +
+                      " join fetch o.member m" +
+                      " join fetch o.delivery d " +
+                      " join fetch  o.orderItems oi " +
+                      " join fetch  oi.item i ", Order.class
+      )
+              .setFirstResult(1)   // 일대다 페치 조인에서..  (데이터 뻥튀기 되는것들..)
+              .setMaxResults(100)  // 실제 db에서는 페이징 쿼리가 나오지 않지만 !
+              .getResultList();     // jpa에서 메모리에서 페이징해버린다...
     }
 
+
+    /***
+     * 일대다 컬렉션 --> fetchjoin 사용 x
+     * @BatchSize 또는
+     * default_batch_fetch_size: 1000 #최적화 옵션 => 총데이터가 2000이면 2번 날라감.
+     * */
     public List<Order> findAllWithMemberDelivery(int offset, int limit) {
         return em.createQuery(
                 "select o from Order o" +
                         " join fetch o.member m" +
                         " join fetch o.delivery d", Order.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
+                .setFirstResult(offset) // 0
+                .setMaxResults(limit)  // ~
                 .getResultList();
     }
 }

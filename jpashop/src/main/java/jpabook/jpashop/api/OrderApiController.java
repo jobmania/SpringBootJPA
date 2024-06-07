@@ -54,7 +54,7 @@ public class OrderApiController {
      */
     @GetMapping("/api/v1/orders")
     public List<Order> ordersV1() {
-        List<Order> all = orderRepository.findAll();
+        List<Order> all = orderRepository.findAllByString(new OrderSearch());
         for (Order order : all) {
             order.getMember().getName(); //Lazy 강제 초기화
             order.getDelivery().getAddress(); //Lazy 강제 초기환
@@ -66,7 +66,7 @@ public class OrderApiController {
 
     @GetMapping("/api/v2/orders")
     public List<OrderDto> ordersV2() {
-        List<Order> orders = orderRepository.findAll();
+        List<Order> orders = orderRepository.findAllByString(new OrderSearch());
         List<OrderDto> result = orders.stream()
                 .map(o -> new OrderDto(o))
                 .collect(toList());
@@ -77,6 +77,13 @@ public class OrderApiController {
     @GetMapping("/api/v3/orders")
     public List<OrderDto> ordersV3() {
         List<Order> orders = orderRepository.findAllWithItem();
+
+        for (Order order : orders) {
+            System.out.println("order = " + order);
+            System.out.println("order.getId() = " + order.getId());
+        }
+        
+        
         List<OrderDto> result = orders.stream()
                 .map(o -> new OrderDto(o))
                 .collect(toList());
@@ -125,6 +132,11 @@ public class OrderApiController {
 
     @Data
     static class OrderDto {
+
+        /***
+         * OrderDto(DTO)안에 엔티티가 담겨 있으면 안된다...
+         * List<OrderItem> orderItems; ===>   private List<OrderItemDto> orderItems;
+         * */
 
         private Long orderId;
         private String name;
