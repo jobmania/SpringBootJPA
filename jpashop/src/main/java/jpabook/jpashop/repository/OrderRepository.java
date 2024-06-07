@@ -135,13 +135,12 @@ public class OrderRepository {
     /***
      * 일대다 컬렉션 --> fetchjoin 사용 x
      * @BatchSize 또는
-     * default_batch_fetch_size: 1000 #최적화 옵션 => 총데이터가 2000이면 2번 날라감.
+     *
      * */
     public List<Order> findAllWithMemberDelivery(int offset, int limit) {
         return em.createQuery(
-                "select o from Order o" +
-                        " join fetch o.member m" +
-                        " join fetch o.delivery d", Order.class)
+                "select o from Order o",
+                  Order.class)
                 .setFirstResult(offset) // 0
                 .setMaxResults(limit)  // ~
                 .getResultList();
