@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(of = "orderId")
+@EqualsAndHashCode(of = "orderId") // map 중복제거시 사용.
 public class OrderQueryDto {
 
     private Long orderId;

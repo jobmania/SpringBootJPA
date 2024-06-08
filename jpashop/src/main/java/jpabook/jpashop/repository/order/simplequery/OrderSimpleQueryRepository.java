@@ -12,6 +12,10 @@ public class OrderSimpleQueryRepository {
 
     private final EntityManager em;
 
+    // 조회용도지만?
+    // 쿼리가 무거우면 분리해보자
+
+
     public List<OrderSimpleQueryDto> findOrderDtos() {
         return em.createQuery(
                 // 생성자 직접 맵핑해줘야됨.

@@ -13,6 +13,7 @@ spring:
 #        show_sql: true
         format_sql: true
         default_batch_fetch_size: 1000 #최적화 옵션 => 총데이터가 2000이면 2번 날라감.
+#    open-in-view: false # false
 
 logging.level:
   org.hibernate.SQL: debug
