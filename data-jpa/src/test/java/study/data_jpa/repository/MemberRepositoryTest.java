@@ -293,4 +293,78 @@ class MemberRepositoryTest {
         //then
         assertThat(resultCount).isEqualTo(5);
     }
+
+    @Test
+    public void findMemberLazy(){
+        // given
+        // member 1 -> teamA
+        // member2 -> team B
+
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 23, teamB);
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<Member> members = memberRepository.findEntityGraphByUserName("member1");
+
+
+        //then
+
+        for (Member member : members) {
+            System.out.println(member.getUserName());
+            System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
+        }
+
+
+    }
+
+    @Test
+    public void queryHint(){
+
+        //given
+        Member member = new Member("member1", 10);
+        memberRepository.save(member);
+        em.flush();
+        em.clear();
+
+        //when --- read_only 스냅샷을 안만들어버림
+        // 변경감지 -- 기존 객체와 변경 객체 비교..
+        Member findMember = memberRepository.findReadOnlyByUserName("member1");
+        findMember.setUserName("member2");
+        em.flush();
+
+        //then
+
+
+    }
+
+
+    @Test
+    public void lock(){
+
+        //given
+        Member member = new Member("member1", 10);
+        memberRepository.save(member);
+        em.flush();
+        em.clear();
+
+        //when --- read_only 스냅샷을 안만들어버림
+        // 변경감지 -- 기존 객체와 변경 객체 비교..
+        List<Member> member1 = memberRepository.findLockByUserName("member1");
+
+        //then
+
+    }
 }
