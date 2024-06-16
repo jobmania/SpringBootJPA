@@ -14,7 +14,7 @@ import study.data_jpa.entity.Team;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
     /** 파라미터가 많아질수록 메서드 명이 길어져용~ */
     List<Member> findByUserNameAndAgeGreaterThan(String username, int age);

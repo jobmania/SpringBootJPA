@@ -354,6 +354,7 @@ class MemberRepositoryTest {
     @Test
     public void lock(){
 
+
         //given
         Member member = new Member("member1", 10);
         memberRepository.save(member);
@@ -367,4 +368,11 @@ class MemberRepositoryTest {
         //then
 
     }
+
+    @Test
+    public void callCustom(){
+        List<Member> result = memberRepository.findMemberCustom();
+
+    }
+
 }
