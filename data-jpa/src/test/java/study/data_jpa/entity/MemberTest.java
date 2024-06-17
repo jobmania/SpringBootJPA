@@ -3,8 +3,10 @@ package study.data_jpa.entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.data_jpa.repository.MemberRepository;
 
 import java.util.List;
 
@@ -14,6 +16,9 @@ class MemberTest {
 
     @PersistenceContext
     EntityManager em;
+
+    @Autowired
+    MemberRepository memberRepository;
 
 
     @Test
@@ -44,5 +49,24 @@ class MemberTest {
             System.out.println("member team = " + member.getTeam());
         }
 
+    }
+
+
+    @Test
+    public void JpaEventBaseEntity() throws InterruptedException {
+        //given
+        Member member = new Member("member1",10);
+        memberRepository.save(member); // @PrePersit
+        Thread.sleep(100);
+
+        em.flush();
+        em.clear();
+        //when
+        Member member1 = memberRepository.findById(member.getId()).get();
+        //then
+        System.out.println(member1.getCreatedDate());
+        System.out.println(member1.getLastModifiedDate());
+        System.out.println("member1.getCreatedBy() = " + member1.getCreatedBy());
+        System.out.println("member1.getLastModifiedBy() = " + member1.getLastModifiedBy());
     }
 }

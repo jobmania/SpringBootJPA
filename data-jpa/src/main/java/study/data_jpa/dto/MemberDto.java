@@ -2,6 +2,9 @@ package study.data_jpa.dto;
 
 
 import lombok.Data;
+import study.data_jpa.entity.Member;
+
+import javax.swing.plaf.PanelUI;
 
 @Data
 public class MemberDto {
@@ -13,5 +16,11 @@ public class MemberDto {
         this.id = id;
         this.username = username;
         this.teamName = teamName;
+    }
+
+    public MemberDto(Member member){
+        this.id = member.getId();
+        this.username = member.getUserName();
+
     }
 }
