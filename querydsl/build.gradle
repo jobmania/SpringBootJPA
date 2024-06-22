@@ -37,7 +37,7 @@ dependencies {
 
 	//Querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
-	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
@@ -46,7 +46,13 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-clean {
-	delete file('src/main/generated')
+
+
+def querydslSrcDir = 'src/main/generated'
+tasks.withType(JavaCompile) {
+	options.generatedSourceOutputDirectory = file(querydslSrcDir)
 }
 
+clean {
+	delete file(querydslSrcDir)
+}
