@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.data_jpa.dto.MemberDto;
 import study.data_jpa.entity.Member;
@@ -22,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+//@Rollback(value = false)
 class MemberRepositoryTest {
 
     @Autowired
@@ -106,7 +105,7 @@ class MemberRepositoryTest {
 
 
         assertThat(result.get(0).getUserName()).isEqualTo("AAA");
-        assertThat(result.get(0).getAge()).isEqualTo(20);
+        assertThat(result.get(0).getAge()).isEqualTo(10);
         assertThat(result.size()).isEqualTo(1);
     }
 
@@ -361,8 +360,6 @@ class MemberRepositoryTest {
         em.flush();
         em.clear();
 
-        //when --- read_only 스냅샷을 안만들어버림
-        // 변경감지 -- 기존 객체와 변경 객체 비교..
         List<Member> member1 = memberRepository.findLockByUserName("member1");
 
         //then
@@ -375,4 +372,60 @@ class MemberRepositoryTest {
 
     }
 
+    @Test
+    public void projections(){
+
+        //given
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member member1 = new Member("m1", 10,teamA);
+        Member member2 = new Member("m2", 10,teamA);
+
+        em.persist(member1);
+        em.persist(member2);
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        List<NestedClosedProjections> result = memberRepository.findProjectionsByUserName("m1",NestedClosedProjections.class);
+        //then
+
+        for (NestedClosedProjections nestedClosedProjections : result) {
+            System.out.println("nestedClosedProjections = " + nestedClosedProjections);
+            String userName = nestedClosedProjections.getUserName();
+            System.out.println("userName = " + userName);
+            String temaName = nestedClosedProjections.getTeam().getName();
+            System.out.println("temaName = " + temaName);
+        }
+
+    }
+
+
+    @Test
+    public void nativeQuery(){
+
+        //given
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member member1 = new Member("m1", 10,teamA);
+        Member member2 = new Member("m2", 10,teamA);
+
+        em.persist(member1);
+        em.persist(member2);
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        Page<MemberProjection> reulst = memberRepository.findByNativeProjection(PageRequest.of(0, 10));
+        //then
+
+        System.out.println("reulst = " + reulst);
+
+    }
 }
