@@ -2,10 +2,8 @@ package study.querydsl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -17,15 +15,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.QMember;
-import study.querydsl.entity.QTeam;
 import study.querydsl.entity.Team;
 
 import java.util.List;
 
-import static com.querydsl.jpa.JPAExpressions.*;
-import static org.assertj.core.api.Assertions.*;
+import static com.querydsl.jpa.JPAExpressions.select;
+import static org.assertj.core.api.Assertions.assertThat;
 import static study.querydsl.entity.QMember.member;
-import static study.querydsl.entity.QTeam.*;
+import static study.querydsl.entity.QTeam.team;
 
 @SpringBootTest
 @Transactional
