@@ -1,8 +1,6 @@
 package study.querydsl.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,30 +12,29 @@ import study.querydsl.entity.Team;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class MemberJpaRepositoryTest {
-
+class MemberRepositoryTest {
     @Autowired
     EntityManager em;
 
     @Autowired
-    MemberJpaRepository memberJpaRepository;
+    MemberRepository memberRepository;
 
     @Test
     public void basicTest(){
         Member member= new Member("member1",10);
-        memberJpaRepository.save(member);
-        Member findMember = memberJpaRepository.findById(member.getId()).get();
-        List<Member> result1 = memberJpaRepository.findAll_QueryDsl();
+        memberRepository.save(member);
+        Member findMember = memberRepository.findById(member.getId()).get();
+        List<Member> result1 = memberRepository.findAll();
         assertThat(result1).containsExactly(member);
 
-        List<Member> result2 = memberJpaRepository.findByUsername_QueryDsl("member1");
+        List<Member> result2 = memberRepository.findByUsername("member1");
         assertThat(result2).containsExactly(member);
     }
-
 
     @Test
     public void searchTest(){
@@ -59,17 +56,14 @@ class MemberJpaRepositoryTest {
         em.persist( member4);
 
         MemberSearchCondition condition = new MemberSearchCondition();
-        condition.setAgeGoe(35);
+        condition.setAgeLoe(24);
         condition.setAgeGoe(40);
         condition.setTeamName("teamB");
-        List<MemberTeamDto> result = memberJpaRepository.search(condition);
+        List<MemberTeamDto> result = memberRepository.search(condition);
 
-        // 가급적 페이징 쿼리가 같이 ! 
+        // 가급적 페이징 쿼리가 같이 !
 
         // 검증
-//        assertThat(result).extracting("username").containsExactly("member3","member4");
+        assertThat(result).extracting("username").containsExactly("member3","member4");
     }
-
-
-
 }
